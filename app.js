@@ -1,9 +1,20 @@
-let game = (function() {
-    let start = function(){
+let game = (function () {
+    function start() {
         console.log("Game Started");
     }
 
-    return {start};
+    return { start };
+})();
+
+let gameboard = (function () {
+    let board = [["", "", ""],
+                 ["", "", ""],
+                 ["", "", ""]];
+
+    function addMarker(x, y, marker) {
+        board[x][y] = marker;
+    }
+    return { board, addMarker };
 })();
 
 game.start();

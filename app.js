@@ -4,16 +4,23 @@ let game = (function () {
      */
     function start() {
         console.log("Game Started");
+        gameboard.resetBoard();
         displayController.displayBoard(gameboard.board);
     }
 
-    return { start };
+    /**
+     * Restarts the game
+     */
+    function restart(){
+        console.log("Restarting game");
+        start();
+    }
+
+    return { start, restart};
 })();
 
 let gameboard = (function () {
-    let board = [["", "", ""],
-                 ["", "", ""],
-                 ["", "", ""]];
+    let board = [];
 
     /**
      * Adds a marker on the board at position X, Y
@@ -85,12 +92,27 @@ let gameboard = (function () {
 
         return false;
     }
-    return { board, addMarker };
+
+    /**
+     * Resets the gameboard to be a 3x3 empty array
+     */
+    function resetBoard(){
+        board.splice(0, board.length);
+        let n = 3;
+        for (let i = 0; i < n; i++){
+            let row = [];
+            for (let j = 0; j < n; j++){
+                row.push("");
+            }
+            board.push(row);
+        }
+    }
+    return { board, addMarker, resetBoard};
 })();
 
 let displayController = (function() {
     /**
-     * Can display the gameboard in the console
+     * Displays the gameboard in the console
      * @param {*} gameboard 
      */
     function displayBoard(board){

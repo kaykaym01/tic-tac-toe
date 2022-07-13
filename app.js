@@ -1,3 +1,18 @@
+const playerFactory = (name, marker) => {
+    /**
+     * Player takes their turn and adds a marker to the gameboard
+     * @param {*} gameboard 
+     */
+    function takeTurn(gameboard){
+        let posX = prompt("Select the row position of your marker");
+        let posY = prompt("Select the column position of your marker");
+        console.log(name + " Turn");
+        gameboard.addMarker(parseInt(posX), parseInt(posY), marker); 
+    }
+
+    return {name, marker, takeTurn};
+}
+
 let game = (function () {
     /**
      * Starts the game 

@@ -10,6 +10,14 @@ const playerFactory = (name, marker) => {
         gameboard.addMarker(parseInt(posX), parseInt(posY), marker); 
     }
 
+    /**
+     * Player changes their name from name to newName
+     * @param {*} newName 
+     */
+    function setName(newName){
+        name = newName;
+    }
+
     return {name, marker, takeTurn};
 }
 

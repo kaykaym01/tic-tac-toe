@@ -18,7 +18,7 @@ const playerFactory = (name, marker) => {
         name = newName;
     }
 
-    return {name, marker, takeTurn};
+    return {name, marker, takeTurn, setName};
 }
 
 let game = (function () {

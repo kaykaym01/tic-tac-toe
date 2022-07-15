@@ -44,6 +44,11 @@ let game = (function () {
 
 let gameboard = (function () {
     let board = [];
+    let _boardRows = 3;
+    let _boardCols = 3;
+    let _maxMoves = _boardCols * _boardRows;
+    let _movesTaken = 0;
+    let _gameOver = false;
 
     /**
      * Adds a marker on the board at position X, Y
@@ -53,10 +58,23 @@ let gameboard = (function () {
      */
     function addMarker(x, y, marker) {
         board[x][y] = marker;
+        _movesTaken++;
         displayController.displayBoard(gameboard.board);
         if (_checkForWinner(x, y, marker)){
             console.log("Winner is: " + marker);
+            _gameOver = true;
+        } else if (_checkForTiedGame()){
+            console.log("Draw");
+            _gameOver = true;
         }
+    }
+
+    /**
+     * 
+     * @returns true if the game has ended in a tie
+     */
+    function _checkForTiedGame() {
+        return _maxMoves == _movesTaken;
     }
 
     /**

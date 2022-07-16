@@ -51,7 +51,7 @@ let game = (function () {
 })();
 
 let gameboard = (function () {
-    let board = [];
+    let _board = [];
     let _numRows = 3;
     let _numCols = 3;
     let _maxMoves = _numRows * _numCols;
@@ -81,7 +81,7 @@ let gameboard = (function () {
      * @returns The marker present at board[row][col], if present. Otherwise a non-breaking space.
      */
     function getMarkerAt(row, col) {
-        return (board[row][col]) ? board[row][col] : '\xa0';
+        return (_board[row][col]) ? _board[row][col] : '\xa0';
     }
 
     /**
@@ -94,7 +94,7 @@ let gameboard = (function () {
         if (_gameOver) {
             console.log("Game is over. Start new game to continue playing.")
         } else {
-            board[x][y] = marker;
+            _board[x][y] = marker;
             _movesTaken++;
             displayController.updateCell(gameboard, x, y);
             if (_checkForWinner(x, y, marker)) {
@@ -125,7 +125,7 @@ let gameboard = (function () {
     function _checkForWinner(lastX, lastY, marker) {
         // check for row winner
         for (let i = 0; i < _numCols; i++) {
-            if (board[lastX][i] != marker) {
+            if (_board[lastX][i] != marker) {
                 break;
             }
             if (i == _numCols - 1) {
@@ -135,7 +135,7 @@ let gameboard = (function () {
 
         // check for column winner
         for (let i = 0; i < _numRows; i++) {
-            if (board[i][lastY] != marker) {
+            if (_board[i][lastY] != marker) {
                 break;
             }
             if (i == _numRows - 1) {
@@ -146,7 +146,7 @@ let gameboard = (function () {
         //if on positive diagonal, check for diagonal winner
         if (lastX == lastY) {
             for (let i = 0; i < _numCols; i++) {
-                if (board[i][i] != marker) {
+                if (_board[i][i] != marker) {
                     break;
                 }
                 if (i == _numCols - 1) {
@@ -158,7 +158,7 @@ let gameboard = (function () {
         // if on anti-diagonal, check for diagonal winner
         if (lastX + lastY == _numCols - 1) {
             for (let i = 0; i < _numCols; i++) {
-                if (board[i][_numCols - 1 - i] != marker) {
+                if (_board[i][_numCols - 1 - i] != marker) {
                     break;
                 }
                 if (i == _numCols - 1) {
@@ -175,13 +175,13 @@ let gameboard = (function () {
      */
     function resetBoard() {
         _gameOver = false;
-        board.splice(0, _numRows);
+        _board.splice(0, _numRows);
         for (let i = 0; i < _numRows; i++) {
             let row = [];
             for (let j = 0; j < _numCols; j++) {
                 row.push("");
             }
-            board.push(row);
+            _board.push(row);
         }
     }
 

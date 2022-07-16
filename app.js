@@ -47,7 +47,7 @@ let game = (function () {
         gameboard.endGame();
     }
 
-    return { start, restart };
+    return { start, restart, end};
 })();
 
 let gameboard = (function () {
@@ -191,7 +191,15 @@ let gameboard = (function () {
     function endGame() {
         _gameOver = true;
     }
-    return { addMarker, resetBoard, endGame, getNumCols, getNumRows, getMarkerAt };
+
+    /**
+     * Whether or not the game is over
+     * @returns true if the game is over, false otherwise
+     */
+    function isGameOver(){
+        return _gameOver;
+    }
+    return { addMarker, resetBoard, endGame, getNumCols, getNumRows, getMarkerAt, isGameOver };
 })();
 
 let displayController = (function () {

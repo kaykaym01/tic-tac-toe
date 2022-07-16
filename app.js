@@ -191,7 +191,7 @@ let gameboard = (function () {
     function endGame() {
         _gameOver = true;
     }
-    return { board, addMarker, resetBoard, endGame, getNumCols, getNumRows, getMarkerAt};
+    return { addMarker, resetBoard, endGame, getNumCols, getNumRows, getMarkerAt };
 })();
 
 let displayController = (function () {

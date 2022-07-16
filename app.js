@@ -52,11 +52,27 @@ let game = (function () {
 
 let gameboard = (function () {
     let board = [];
-    let _boardRows = 3;
-    let _boardCols = 3;
-    let _maxMoves = _boardCols * _boardRows;
+    let _numRows = 3;
+    let _numCols = 3;
+    let _maxMoves = _numRows * _numCols;
     let _movesTaken = 0;
     let _gameOver = false;
+
+    /**
+     * 
+     * @returns the number of rows in the gameboard
+     */
+    function getNumRows(){
+        return _numRows;
+    }
+    
+    /**
+     * 
+     * @returns the number of columns in the gameboard
+     */
+    function getNumCols(){
+        return _numCols;
+    }
 
     /**
      * Adds a marker on the board at position X, Y
@@ -97,47 +113,45 @@ let gameboard = (function () {
      * @returns 
      */
     function _checkForWinner(lastX, lastY, marker) {
-        let n = board.length;
-
         // check for row winner
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < _numCols; i++) {
             if (board[lastX][i] != marker) {
                 break;
             }
-            if (i == n - 1) {
+            if (i == _numCols - 1) {
                 return true;
             }
         }
 
         // check for column winner
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < _numRows; i++) {
             if (board[i][lastY] != marker) {
                 break;
             }
-            if (i == n - 1) {
+            if (i == _numRows - 1) {
                 return true;
             }
         }
 
         //if on positive diagonal, check for diagonal winner
         if (lastX == lastY) {
-            for (let i = 0; i < n; i++) {
+            for (let i = 0; i < _numCols; i++) {
                 if (board[i][i] != marker) {
                     break;
                 }
-                if (i == n - 1) {
+                if (i == _numCols - 1) {
                     return true;
                 }
             }
         }
 
         // if on anti-diagonal, check for diagonal winner
-        if (lastX + lastY == n - 1) {
+        if (lastX + lastY == _numCols - 1) {
             for (let i = 0; i < n; i++) {
-                if (board[i][n - 1 - i] != marker) {
+                if (board[i][_numCols - 1 - i] != marker) {
                     break;
                 }
-                if (i == n - 1) {
+                if (i == _numCols - 1) {
                     return true;
                 }
             }
@@ -151,11 +165,10 @@ let gameboard = (function () {
      */
     function resetBoard() {
         _gameOver = false;
-        board.splice(0, board.length);
-        let n = 3;
-        for (let i = 0; i < n; i++) {
+        board.splice(0, _numRows);
+        for (let i = 0; i < _numRows; i++) {
             let row = [];
-            for (let j = 0; j < n; j++) {
+            for (let j = 0; j < _numCols; j++) {
                 row.push("");
             }
             board.push(row);
@@ -168,7 +181,7 @@ let gameboard = (function () {
     function endGame() {
         _gameOver = true;
     }
-    return { board, addMarker, resetBoard, endGame };
+    return { board, addMarker, resetBoard, endGame, getNumCols, getNumRows};
 })();
 
 let displayController = (function () {
@@ -178,12 +191,13 @@ let displayController = (function () {
      */
     function displayBoard(gameboard) {
         let board = gameboard.board;
-        let n = board.length;
+        let numRows = gameboard.getNumRows();
+        let numCols = gameboard.getNumCols();
         const ticTacToeGrid = document.querySelector(".tic-tac-toe-grid");
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < numRows; i++) {
             let gridRow = document.createElement("div");
             gridRow.classList.add("grid-row");
-            for (let j = 0; j < n; j++) {
+            for (let j = 0; j < numCols; j++) {
                 let gridCell = document.createElement("div");
                 gridCell.classList.add("grid-cell");
                 gridCell.setAttribute("data-row", i);

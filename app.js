@@ -216,7 +216,6 @@ let displayController = (function () {
             }
             ticTacToeGrid.append(gridRow);
         }
-        console.log("BLOOP");
     }
 
     /**

@@ -200,7 +200,6 @@ let displayController = (function () {
      * @param {*} gameboard 
      */
     function displayBoard(gameboard) {
-        let board = gameboard.board;
         let numRows = gameboard.getNumRows();
         let numCols = gameboard.getNumCols();
         const ticTacToeGrid = document.querySelector(".tic-tac-toe-grid");
@@ -227,7 +226,6 @@ let displayController = (function () {
      * @param {number} cell
      */
     function updateCell(gameboard, row, col) {
-        let board = gameboard.board;
         let cell = document.querySelector("[data-row=" + CSS.escape(row) + "][data-col=" + CSS.escape(col) + "]");
         cell.textContent = gameboard.getMarkerAt(row, col);
     }

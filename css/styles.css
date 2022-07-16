@@ -1,0 +1,31 @@
+
+.tic-tac-toe-grid {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 20px;
+    width: 50%;
+}
+
+.grid-row {
+    display: flex;
+    justify-content: center;
+    border-bottom: solid 2px pink;
+}
+
+.grid-cell {
+    border-right: solid 2px pink;
+    text-align: center;
+    font-size: 1rem;
+    padding: 1.5em;
+    flex: 1 1 0;
+    aspect-ratio: 1 / 1 ;
+}
+
+.grid-cell:last-child {
+    border-right: none;
+}
+
+.grid-row:last-child {
+    border-bottom: none;
+}

@@ -1,7 +1,7 @@
 const playerFactory = (name, marker) => {
     /**
      * Player takes their turn and adds a marker to the gameboard
-     * @param {*} gameboard 
+     * @param {*} gameboard The gameboard for players to take a turn on
      */
     function takeTurn(gameboard) {
         let posX = prompt("Select the row position of your marker");
@@ -28,7 +28,7 @@ let game = (function () {
     function start() {
         console.log("Game Started");
         gameboard.resetBoard();
-        displayController.displayBoard(gameboard.board);
+        displayController.displayBoard(gameboard);
     }
 
     /**
@@ -70,7 +70,7 @@ let gameboard = (function () {
         } else {
             board[x][y] = marker;
             _movesTaken++;
-            displayController.displayBoard(gameboard.board);
+            displayController.updateCell(gameboard, x, y);
             if (_checkForWinner(x, y, marker)) {
                 console.log("Winner is: " + marker);
                 _gameOver = true;
@@ -176,25 +176,38 @@ let displayController = (function () {
      * Displays the gameboard in the console
      * @param {*} gameboard 
      */
-    function displayBoard(board) {
+    function displayBoard(gameboard) {
+        let board = gameboard.board;
         let n = board.length;
-        let display = "";
+        const ticTacToeGrid = document.querySelector(".tic-tac-toe-grid");
         for (let i = 0; i < n; i++) {
-            let row = "";
+            let gridRow = document.createElement("div");
+            gridRow.classList.add("grid-row");
             for (let j = 0; j < n; j++) {
-                row += (board[i][j]) ? board[i][j] : "_";
-                if (j < n - 1) {
-                    row += "  ";
-                }
+                let gridCell = document.createElement("div");
+                gridCell.classList.add("grid-cell");
+                gridCell.setAttribute("data-row", i);
+                gridCell.setAttribute("data-col", j);
+                gridCell.textContent = (board[i][j]) ? board[i][j] : '\xa0';
+                gridRow.append(gridCell);
             }
-            display += row;
-            if (i < n - 1) {
-                display += "\n";
-            }
+            ticTacToeGrid.append(gridRow);
         }
-        console.log(display)
+        console.log("BLOOP");
     }
-    return { displayBoard };
+
+    /**
+     * Updates the value in the gameboard display at position row, col
+     * @param {*} gameboard 
+     * @param {number} row
+     * @param {number} cell
+     */
+    function updateCell(gameboard, row, col){
+        let board = gameboard.board;
+        let cell = document.querySelector("[data-row="+CSS.escape(row)+"][data-col="+CSS.escape(col)+"]");
+        cell.textContent = (board[row][col]) ? board[row][col] : '\xa0';
+    }
+    return { displayBoard, updateCell };
 })();
 
 game.start();

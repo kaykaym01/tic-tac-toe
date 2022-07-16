@@ -62,16 +62,26 @@ let gameboard = (function () {
      * 
      * @returns the number of rows in the gameboard
      */
-    function getNumRows(){
+    function getNumRows() {
         return _numRows;
     }
-    
+
     /**
      * 
      * @returns the number of columns in the gameboard
      */
-    function getNumCols(){
+    function getNumCols() {
         return _numCols;
+    }
+
+    /**
+     * Gets the marker at a specific position
+     * @param {*} row The row index
+     * @param {*} col The column index
+     * @returns The marker present at board[row][col], if present. Otherwise a non-breaking space.
+     */
+    function getMarkerAt(row, col) {
+        return (board[row][col]) ? board[row][col] : '\xa0';
     }
 
     /**
@@ -147,7 +157,7 @@ let gameboard = (function () {
 
         // if on anti-diagonal, check for diagonal winner
         if (lastX + lastY == _numCols - 1) {
-            for (let i = 0; i < n; i++) {
+            for (let i = 0; i < _numCols; i++) {
                 if (board[i][_numCols - 1 - i] != marker) {
                     break;
                 }
@@ -181,7 +191,7 @@ let gameboard = (function () {
     function endGame() {
         _gameOver = true;
     }
-    return { board, addMarker, resetBoard, endGame, getNumCols, getNumRows};
+    return { board, addMarker, resetBoard, endGame, getNumCols, getNumRows, getMarkerAt};
 })();
 
 let displayController = (function () {
@@ -202,7 +212,7 @@ let displayController = (function () {
                 gridCell.classList.add("grid-cell");
                 gridCell.setAttribute("data-row", i);
                 gridCell.setAttribute("data-col", j);
-                gridCell.textContent = (board[i][j]) ? board[i][j] : '\xa0';
+                gridCell.textContent = gameboard.getMarkerAt(i, j);
                 gridRow.append(gridCell);
             }
             ticTacToeGrid.append(gridRow);
@@ -216,10 +226,10 @@ let displayController = (function () {
      * @param {number} row
      * @param {number} cell
      */
-    function updateCell(gameboard, row, col){
+    function updateCell(gameboard, row, col) {
         let board = gameboard.board;
-        let cell = document.querySelector("[data-row="+CSS.escape(row)+"][data-col="+CSS.escape(col)+"]");
-        cell.textContent = (board[row][col]) ? board[row][col] : '\xa0';
+        let cell = document.querySelector("[data-row=" + CSS.escape(row) + "][data-col=" + CSS.escape(col) + "]");
+        cell.textContent = gameboard.getMarkerAt(row, col);
     }
     return { displayBoard, updateCell };
 })();

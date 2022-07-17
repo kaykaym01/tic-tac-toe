@@ -128,8 +128,8 @@ let gameboard = (function () {
         }
         else if (!_currentPlayer) {
             console.log("Current player not yet set.");
-        } 
-        else if (!_isCellEmpty(x, y)){
+        }
+        else if (!_isCellEmpty(x, y)) {
             console.log("Must choose an empty cell")
         }
         else {
@@ -250,7 +250,7 @@ let gameboard = (function () {
 let displayController = (function () {
     /**
      * Displays the gameboard in the console
-     * @param {*} gameboard 
+     * @param {*} gameboard The gameboard with the underlying board array
      */
     function displayBoard(gameboard) {
         let numRows = gameboard.getNumRows();
@@ -273,20 +273,20 @@ let displayController = (function () {
     }
 
     /**
-     * 
+     * Clears all rows from the tic tac toe grid
      */
     function clearBoard() {
         const ticTacToeGrid = document.querySelector(".tic-tac-toe-grid");
-        while (ticTacToeGrid.firstChild){
+        while (ticTacToeGrid.firstChild) {
             ticTacToeGrid.removeChild(ticTacToeGrid.firstChild);
         }
     }
 
     /**
      * Updates the value in the gameboard display at position row, col
-     * @param {*} gameboard 
-     * @param {number} row
-     * @param {number} cell
+     * @param {*} gameboard The gameboard with the underlying board array
+     * @param {number} row The row index
+     * @param {number} col The column index
      */
     function updateCell(gameboard, row, col) {
         let cell = document.querySelector("[data-row=" + CSS.escape(row) + "][data-col=" + CSS.escape(col) + "]");
@@ -307,7 +307,7 @@ let displayController = (function () {
         gameboard.addMarker(row, col);
         updateCell(gameboard, row, col);
     }
-    return { displayBoard, updateCell , clearBoard};
+    return { displayBoard, updateCell, clearBoard };
 })();
 
 game.start();

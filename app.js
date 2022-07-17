@@ -1,16 +1,5 @@
 const playerFactory = (name, marker) => {
     /**
-     * Player takes their turn and adds a marker to the gameboard
-     * @param {*} gameboard The gameboard for players to take a turn on
-     */
-    function takeTurn(gameboard) {
-        let posX = prompt("Select the row position of your marker");
-        let posY = prompt("Select the column position of your marker");
-        console.log(name + " Turn");
-        gameboard.addMarker(parseInt(posX), parseInt(posY), marker);
-    }
-
-    /**
      * Player changes their name from name to newName
      * @param {*} newName 
      */
@@ -18,10 +7,13 @@ const playerFactory = (name, marker) => {
         name = newName;
     }
 
-    return { name, marker, takeTurn, setName };
+    return { name, marker, setName };
 }
 
 let game = (function () {
+    let _player1 = playerFactory("Player 1", "X");
+    let _player2 = playerFactory("Player 2", "O");
+
     /**
      * Starts the game 
      */
@@ -29,6 +21,8 @@ let game = (function () {
         console.log("Game Started");
         gameboard.resetBoard();
         displayController.displayBoard(gameboard);
+        gameboard.setCurrentPlayer(_player1);
+        gameboard.setNextPlayer(_player2);
     }
 
     /**
@@ -47,7 +41,7 @@ let game = (function () {
         gameboard.endGame();
     }
 
-    return { start, restart, end};
+    return { start, restart, end };
 })();
 
 let gameboard = (function () {
@@ -57,9 +51,37 @@ let gameboard = (function () {
     let _maxMoves = _numRows * _numCols;
     let _movesTaken = 0;
     let _gameOver = false;
+    let _currentPlayer;
+    let _nextPlayer;
 
     /**
-     * 
+     * Sets the current player to be player
+     * @param {*} player The player whose turn it will be 
+     */
+    function setCurrentPlayer(player) {
+        console.log(player.name + "'s turn");
+        _currentPlayer = player;
+    }
+
+    /**
+     * Sets the next player to be player
+     * @param {*} player THe player whose turn is coming up after _currentPlayer
+     */
+    function setNextPlayer(player) {
+        _nextPlayer = player;
+    }
+
+    /**
+     * Swaps _currentPlayer and _nextPlayer
+     */
+    function _changeTurns() {
+        let tempPlayer = _currentPlayer;
+        setCurrentPlayer(_nextPlayer);
+        setNextPlayer(tempPlayer);
+    }
+
+    /**
+     * Gets the number of rows in the gameboard
      * @returns the number of rows in the gameboard
      */
     function getNumRows() {
@@ -67,7 +89,7 @@ let gameboard = (function () {
     }
 
     /**
-     * 
+     * Gets the number of columnsin the gameboard
      * @returns the number of columns in the gameboard
      */
     function getNumCols() {
@@ -85,24 +107,39 @@ let gameboard = (function () {
     }
 
     /**
+     * Determines whether the cell at position _board[row][col] is empty
+     * @param {*} row The row index
+     * @param {*} col The column index
+     * @returns true if the cell at position _board[row][col] is empty, false otherwise
+     */
+    function isCellEmpty(row, col) {
+        return (_board[row][col] == "") ? true : false;
+    }
+
+    /**
      * Adds a marker on the board at position X, Y
      * @param {number} x Row position 
      * @param {number} y Column position
-     * @param {string} marker String value for marker
      */
-    function addMarker(x, y, marker) {
+    function addMarker(x, y) {
         if (_gameOver) {
             console.log("Game is over. Start new game to continue playing.")
-        } else {
-            _board[x][y] = marker;
+        }
+        else if (!_currentPlayer) {
+            console.log("Current player not yet set.");
+        }
+        else {
+            _board[x][y] = _currentPlayer.marker;
             _movesTaken++;
             displayController.updateCell(gameboard, x, y);
-            if (_checkForWinner(x, y, marker)) {
-                console.log("Winner is: " + marker);
+            if (_checkForWinner(x, y, _currentPlayer.marker)) {
+                console.log("Winner is: " + _currentPlayer.name);
                 _gameOver = true;
             } else if (_checkForTiedGame()) {
                 console.log("Draw");
                 _gameOver = true;
+            } else {
+                _changeTurns();
             }
         }
     }
@@ -116,11 +153,11 @@ let gameboard = (function () {
     }
 
     /**
-     * 
-     * @param {*} lastX 
-     * @param {*} lastY 
-     * @param {*} marker 
-     * @returns 
+     * Checks if there is winner based on the last move
+     * @param {*} lastX The last row index
+     * @param {*} lastY The last column index
+     * @param {*} marker The last marker placed
+     * @returns true if the marker at _board[lastX][lastY] is a win
      */
     function _checkForWinner(lastX, lastY, marker) {
         // check for row winner
@@ -175,6 +212,9 @@ let gameboard = (function () {
      */
     function resetBoard() {
         _gameOver = false;
+        _movesTaken = 0;
+        _currentPlayer = null;
+        _nextPlayer = null;
         _board.splice(0, _numRows);
         for (let i = 0; i < _numRows; i++) {
             let row = [];
@@ -196,10 +236,11 @@ let gameboard = (function () {
      * Whether or not the game is over
      * @returns true if the game is over, false otherwise
      */
-    function isGameOver(){
+    function isGameOver() {
         return _gameOver;
     }
-    return { addMarker, resetBoard, endGame, getNumCols, getNumRows, getMarkerAt, isGameOver };
+
+    return { addMarker, resetBoard, endGame, getNumCols, getNumRows, getMarkerAt, isGameOver, setCurrentPlayer, setNextPlayer, isCellEmpty };
 })();
 
 let displayController = (function () {
@@ -220,6 +261,7 @@ let displayController = (function () {
                 gridCell.setAttribute("data-row", i);
                 gridCell.setAttribute("data-col", j);
                 gridCell.textContent = gameboard.getMarkerAt(i, j);
+                gridCell.addEventListener('click', _gridCellClicked.bind(this, gameboard, gridCell));
                 gridRow.append(gridCell);
             }
             ticTacToeGrid.append(gridRow);
@@ -235,6 +277,25 @@ let displayController = (function () {
     function updateCell(gameboard, row, col) {
         let cell = document.querySelector("[data-row=" + CSS.escape(row) + "][data-col=" + CSS.escape(col) + "]");
         cell.textContent = gameboard.getMarkerAt(row, col);
+    }
+
+    /**
+     * When the grid cell is clicked, if it is at an empty position,
+     * the gameboard board is updated with the marker of _currentPlayer
+     * and the display is updated
+     * 
+     * @param {*} gameboard The gameboard with the underlying board array
+     * @param {*} gridCell The HTML grid cell element that was just clicked
+     */
+    function _gridCellClicked(gameboard, gridCell) {
+        let row = gridCell.getAttribute("data-row");
+        let col = gridCell.getAttribute("data-col");
+        if (gameboard.isCellEmpty(row, col)) {
+            gameboard.addMarker(row, col);
+            updateCell(gameboard, row, col);
+        } else {
+            console.log("Must choose an empty cell");
+        }
     }
     return { displayBoard, updateCell };
 })();

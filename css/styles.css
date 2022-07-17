@@ -26,6 +26,10 @@
     border-right: none;
 }
 
+.grid-cell:hover{
+    cursor: pointer;
+}
+
 .grid-row:last-child {
     border-bottom: none;
 }

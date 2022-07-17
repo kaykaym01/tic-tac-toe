@@ -113,7 +113,7 @@ let gameboard = (function () {
      * @param {*} col The column index
      * @returns true if the cell at position _board[row][col] is empty, false otherwise
      */
-    function isCellEmpty(row, col) {
+    function _isCellEmpty(row, col) {
         return (_board[row][col] == "") ? true : false;
     }
 
@@ -128,6 +128,9 @@ let gameboard = (function () {
         }
         else if (!_currentPlayer) {
             console.log("Current player not yet set.");
+        } 
+        else if (!_isCellEmpty(x, y)){
+            console.log("Must choose an empty cell")
         }
         else {
             _board[x][y] = _currentPlayer.marker;
@@ -241,7 +244,7 @@ let gameboard = (function () {
         return _gameOver;
     }
 
-    return { addMarker, resetBoard, endGame, getNumCols, getNumRows, getMarkerAt, isGameOver, setCurrentPlayer, setNextPlayer, isCellEmpty };
+    return { addMarker, resetBoard, endGame, getNumCols, getNumRows, getMarkerAt, isGameOver, setCurrentPlayer, setNextPlayer };
 })();
 
 let displayController = (function () {
@@ -301,12 +304,8 @@ let displayController = (function () {
     function _gridCellClicked(gameboard, gridCell) {
         let row = gridCell.getAttribute("data-row");
         let col = gridCell.getAttribute("data-col");
-        if (gameboard.isCellEmpty(row, col)) {
-            gameboard.addMarker(row, col);
-            updateCell(gameboard, row, col);
-        } else {
-            console.log("Must choose an empty cell");
-        }
+        gameboard.addMarker(row, col);
+        updateCell(gameboard, row, col);
     }
     return { displayBoard, updateCell , clearBoard};
 })();

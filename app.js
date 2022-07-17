@@ -20,6 +20,7 @@ let game = (function () {
     function start() {
         console.log("Game Started");
         gameboard.resetBoard();
+        displayController.clearBoard();
         displayController.displayBoard(gameboard);
         gameboard.setCurrentPlayer(_player1);
         gameboard.setNextPlayer(_player2);
@@ -269,6 +270,16 @@ let displayController = (function () {
     }
 
     /**
+     * 
+     */
+    function clearBoard() {
+        const ticTacToeGrid = document.querySelector(".tic-tac-toe-grid");
+        while (ticTacToeGrid.firstChild){
+            ticTacToeGrid.removeChild(ticTacToeGrid.firstChild);
+        }
+    }
+
+    /**
      * Updates the value in the gameboard display at position row, col
      * @param {*} gameboard 
      * @param {number} row
@@ -297,7 +308,7 @@ let displayController = (function () {
             console.log("Must choose an empty cell");
         }
     }
-    return { displayBoard, updateCell };
+    return { displayBoard, updateCell , clearBoard};
 })();
 
 game.start();

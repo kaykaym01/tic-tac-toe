@@ -19,12 +19,16 @@ let game = (function () {
      */
     function start() {
         console.log("Game Started");
+
         gameboard.resetBoard();
-        _setUpGameButtons();
-        displayController.clearBoard();
-        displayController.displayBoard(gameboard);
         gameboard.setCurrentPlayer(_player1);
         gameboard.setNextPlayer(_player2);
+
+        displayController.clearBoard();
+        displayController.displayBoard(gameboard);
+
+        _setUpGameButtons();
+        _setUpPlayersDisplay();
     }
 
     function _setUpGameButtons() {
@@ -33,6 +37,37 @@ let game = (function () {
 
         const endButton = document.querySelector(".end-btn");
         endButton.addEventListener("click", end);
+    }
+
+    /**
+     * Adds both player names and markers to player display
+     */
+    function _setUpPlayersDisplay() {
+        _addPlayerToDisplay(_player1);
+        _addPlayerToDisplay(_player2);
+    }
+
+    /**
+     * Creates a player display with the name and marker for a given player 
+     * @param {*} player The player to display
+     */
+    function _addPlayerToDisplay(player) {
+        const allPlayersDisplay = document.querySelector(".players");
+
+        const playerDisplay = document.createElement("div");
+        playerDisplay.classList.add("player");
+
+        const playerName = document.createElement("div");
+        playerName.classList.add("player-name");
+        playerName.textContent = player.name;
+        playerDisplay.append(playerName);
+
+        const playerMarker = document.createElement("div");
+        playerMarker.classList.add("player-marker");
+        playerMarker.textContent = player.marker;
+        playerDisplay.append(playerMarker);
+
+        allPlayersDisplay.append(playerDisplay);
     }
 
     /**
@@ -71,6 +106,14 @@ let gameboard = (function () {
     function setCurrentPlayer(player) {
         console.log(player.name + "'s turn");
         _currentPlayer = player;
+    }
+
+    /**
+     * Gets the current player
+     * @returns The current player
+     */
+    function getCurrentPlayer() {
+        return _currentPlayer;
     }
 
     /**
@@ -253,7 +296,7 @@ let gameboard = (function () {
         return _gameOver;
     }
 
-    return { addMarker, resetBoard, endGame, getNumCols, getNumRows, getMarkerAt, isGameOver, setCurrentPlayer, setNextPlayer };
+    return { addMarker, resetBoard, endGame, getNumCols, getNumRows, getMarkerAt, isGameOver, setCurrentPlayer, setNextPlayer, getCurrentPlayer };
 })();
 
 let displayController = (function () {
@@ -279,6 +322,27 @@ let displayController = (function () {
             }
             ticTacToeGrid.append(gridRow);
         }
+        _displayCurrentPlayerTurn(gameboard)
+    }
+
+    /**
+     * Displays the current player's turn
+     * @param {*} gameboard The gameboard keeping track of moves and current players
+     */
+    function _displayCurrentPlayerTurn(gameboard) {
+        const playerTurn = document.querySelector(".player-turn");
+        playerTurn.textContent = gameboard.getCurrentPlayer().name + " Turn";
+        playerTurn.classList.remove("hidden");
+
+    }
+
+    /**
+     * Hides the current player's turn
+     */
+    function _hideCurrentPlayerTurn() {
+        const playerTurn = document.querySelector(".player-turn");
+        playerTurn.textContent = "";
+        playerTurn.classList.add("hidden");
     }
 
     /**
@@ -313,6 +377,7 @@ let displayController = (function () {
      */
     function _gridCellClicked(gameboard, gridCell) {
         _hideErrorMessage();
+        _displayCurrentPlayerTurn(gameboard);
         let row = parseInt(gridCell.getAttribute("data-row"));
         let col = parseInt(gridCell.getAttribute("data-col"));
         gameboard.addMarker(row, col, _showErrorMessage, _showWinnerMessage);
@@ -346,6 +411,8 @@ let displayController = (function () {
         const winnerMsgBox = document.querySelector(".winner");
         winnerMsgBox.textContent = message;
         winnerMsgBox.classList.add("shown");
+        _hideErrorMessage();
+        _hideCurrentPlayerTurn();
     }
 
     /**
@@ -363,6 +430,7 @@ let displayController = (function () {
     function _hideAllMessages() {
         _hideErrorMessage();
         _hideWinnerMessage();
+        _hideCurrentPlayerTurn();
     }
 
     return { displayBoard, updateCell, clearBoard };

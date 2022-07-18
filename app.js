@@ -20,10 +20,19 @@ let game = (function () {
     function start() {
         console.log("Game Started");
         gameboard.resetBoard();
+        _setUpGameButtons();
         displayController.clearBoard();
         displayController.displayBoard(gameboard);
         gameboard.setCurrentPlayer(_player1);
         gameboard.setNextPlayer(_player2);
+    }
+
+    function _setUpGameButtons(){
+        const restartButton = document.querySelector(".restart-btn");
+        restartButton.addEventListener("click", restart);
+
+        const endButton = document.querySelector(".end-btn");
+        endButton.addEventListener("click", end);
     }
 
     /**

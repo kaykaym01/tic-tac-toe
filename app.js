@@ -122,25 +122,25 @@ let gameboard = (function () {
      * @param {number} x Row position 
      * @param {number} y Column position
      */
-    function addMarker(x, y) {
+    function addMarker(x, y, errorLog, winnerLog) {
         if (_gameOver) {
-            console.log("Game is over. Start new game to continue playing.")
+            errorLog("Game is over. Start new game to continue playing.")
         }
         else if (!_currentPlayer) {
-            console.log("Current player not yet set.");
+            errorLog("Current player not yet set.");
         }
         else if (!_isCellEmpty(x, y)) {
-            console.log("Must choose an empty cell")
+            errorLog("Must choose an empty cell")
         }
         else {
             _board[x][y] = _currentPlayer.marker;
             _movesTaken++;
             displayController.updateCell(gameboard, x, y);
             if (_checkForWinner(x, y, _currentPlayer.marker)) {
-                console.log("Winner is: " + _currentPlayer.name);
+                winnerLog("Winner is: " + _currentPlayer.name);
                 _gameOver = true;
             } else if (_checkForTiedGame()) {
-                console.log("Draw");
+                winnerLog("Draw");
                 _gameOver = true;
             } else {
                 _changeTurns();
@@ -276,6 +276,7 @@ let displayController = (function () {
      * Clears all rows from the tic tac toe grid
      */
     function clearBoard() {
+        _hideAllMessages();
         const ticTacToeGrid = document.querySelector(".tic-tac-toe-grid");
         while (ticTacToeGrid.firstChild) {
             ticTacToeGrid.removeChild(ticTacToeGrid.firstChild);
@@ -302,11 +303,42 @@ let displayController = (function () {
      * @param {*} gridCell The HTML grid cell element that was just clicked
      */
     function _gridCellClicked(gameboard, gridCell) {
+        _hideErrorMessage();
         let row = gridCell.getAttribute("data-row");
         let col = gridCell.getAttribute("data-col");
-        gameboard.addMarker(row, col);
+        gameboard.addMarker(row, col, _showErrorMessage, _showWinnerMessage);
         updateCell(gameboard, row, col);
     }
+
+    function _showErrorMessage(message){
+        const errorMsgBox = document.querySelector(".errors");
+        errorMsgBox.textContent = message;
+        errorMsgBox.classList.add("shown");
+    }
+
+    function _hideErrorMessage() {
+        const errorMsgBox = document.querySelector(".errors");
+        errorMsgBox.textContent = "";
+        errorMsgBox.classList.remove("shown");
+    }
+
+    function _showWinnerMessage(message){
+        const winnerMsgBox = document.querySelector(".winner");
+        winnerMsgBox.textContent = message;
+        winnerMsgBox.classList.add("shown");
+    }
+
+    function _hideWinnerMessage() {
+        const winnerMsgBox = document.querySelector(".winner");
+        winnerMsgBox.textContent = "";
+        winnerMsgBox.classList.remove("shown");
+    }
+
+    function _hideAllMessages(){
+        _hideErrorMessage();
+        _hideWinnerMessage();
+    }
+
     return { displayBoard, updateCell, clearBoard };
 })();
 

@@ -313,8 +313,8 @@ let displayController = (function () {
      */
     function _gridCellClicked(gameboard, gridCell) {
         _hideErrorMessage();
-        let row = gridCell.getAttribute("data-row");
-        let col = gridCell.getAttribute("data-col");
+        let row = parseInt(gridCell.getAttribute("data-row"));
+        let col = parseInt(gridCell.getAttribute("data-col"));
         gameboard.addMarker(row, col, _showErrorMessage, _showWinnerMessage);
         updateCell(gameboard, row, col);
     }

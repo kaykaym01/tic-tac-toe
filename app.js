@@ -27,7 +27,7 @@ let game = (function () {
         gameboard.setNextPlayer(_player2);
     }
 
-    function _setUpGameButtons(){
+    function _setUpGameButtons() {
         const restartButton = document.querySelector(".restart-btn");
         restartButton.addEventListener("click", restart);
 
@@ -319,31 +319,48 @@ let displayController = (function () {
         updateCell(gameboard, row, col);
     }
 
-    function _showErrorMessage(message){
+    /**
+     * Displays the error message in the error message box
+     * @param {*} message The error message
+     */
+    function _showErrorMessage(message) {
         const errorMsgBox = document.querySelector(".errors");
         errorMsgBox.textContent = message;
         errorMsgBox.classList.add("shown");
     }
 
+    /**
+     * Clears and hides the error message box
+     */
     function _hideErrorMessage() {
         const errorMsgBox = document.querySelector(".errors");
         errorMsgBox.textContent = "";
         errorMsgBox.classList.remove("shown");
     }
 
-    function _showWinnerMessage(message){
+    /**
+     * Displays the winner message in the winner message box
+     * @param {*} message The winner message
+     */
+    function _showWinnerMessage(message) {
         const winnerMsgBox = document.querySelector(".winner");
         winnerMsgBox.textContent = message;
         winnerMsgBox.classList.add("shown");
     }
 
+    /**
+     * Clears and hides the winner message box
+     */
     function _hideWinnerMessage() {
         const winnerMsgBox = document.querySelector(".winner");
         winnerMsgBox.textContent = "";
         winnerMsgBox.classList.remove("shown");
     }
 
-    function _hideAllMessages(){
+    /**
+     * Clears and hides both the error message and winner message boxes
+     */
+    function _hideAllMessages() {
         _hideErrorMessage();
         _hideWinnerMessage();
     }

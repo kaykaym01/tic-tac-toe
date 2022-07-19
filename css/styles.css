@@ -41,8 +41,8 @@ body {
     font-size: 1rem;
     flex: 0 0 100px;
     height: 100px;
-    aspect-ratio: 1/1;
     font-size: 2rem;
+    aspect-ratio: 1/1;
 }
 
 .grid-cell:last-child {

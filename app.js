@@ -168,7 +168,7 @@ let gameboard = (function () {
      * @param {number} x Row position 
      * @param {number} y Column position
      */
-    function addMarker(x, y, errorLog, winnerLog) {
+    function addMarker(x, y, errorLog, gameEnded) {
         if (_gameOver) {
             errorLog("Game is over. Start new game to continue playing.")
         }
@@ -183,10 +183,10 @@ let gameboard = (function () {
             _movesTaken++;
             displayController.updateCell(gameboard, x, y);
             if (_checkForWinner(x, y, _currentPlayer.marker)) {
-                winnerLog("Winner is: " + _currentPlayer.name);
+                gameEnded(_currentPlayer.name + " wins");
                 _gameOver = true;
             } else if (_checkForTiedGame()) {
-                winnerLog("Draw");
+                gameEnded("Draw");
                 _gameOver = true;
             } else {
                 _changeTurns();
@@ -375,8 +375,21 @@ let displayController = (function () {
         _displayCurrentPlayerTurn(gameboard);
         let row = parseInt(gridCell.getAttribute("data-row"));
         let col = parseInt(gridCell.getAttribute("data-col"));
-        gameboard.addMarker(row, col, _showErrorMessage, _showWinnerMessage);
+        gameboard.addMarker(row, col, _showErrorMessage, _gameEnded);
         updateCell(gameboard, row, col);
+    }
+
+    /**
+     * Handles the display when the game ends. Hides the error messages.
+     * Hides the current player turn. Shows the game over message. Shows
+     * the winner message.
+     * @param {*} message THe winner message
+     */
+    function _gameEnded(message) {
+        _hideErrorMessage();
+        _hideCurrentPlayerTurn();
+        _showGameOverMessage();
+        _showWinnerMessage(message);
     }
 
     /**
@@ -406,8 +419,6 @@ let displayController = (function () {
         const winnerMsgBox = document.querySelector(".winner");
         winnerMsgBox.textContent = message;
         winnerMsgBox.classList.add("shown");
-        _hideErrorMessage();
-        _hideCurrentPlayerTurn();
     }
 
     /**
@@ -420,12 +431,32 @@ let displayController = (function () {
     }
 
     /**
-     * Clears and hides both the error message and winner message boxes
+     * Shows the Game Over message
+     */
+    function _showGameOverMessage() {
+        const gameOverBox = document.querySelector(".game-over");
+        gameOverBox.textContent = "Game Over";
+        gameOverBox.classList.remove("hidden");
+    }
+
+    /**
+     * Hides the game over message
+     */
+    function _hideGameOverMessage() {
+        const gameOverBox = document.querySelector(".game-over");
+        gameOverBox.textContent = "";
+        gameOverBox.classList.add("hidden");
+    }
+
+    /**
+     * Clears and hides both the error message, winner message,
+     * current player, and game over message boxes
      */
     function _hideAllMessages() {
         _hideErrorMessage();
         _hideWinnerMessage();
         _hideCurrentPlayerTurn();
+        _hideGameOverMessage();
     }
 
     return { displayBoard, updateCell, clearBoard };

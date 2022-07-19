@@ -74,7 +74,8 @@
     align-items: center;
 }
 
-.player-turn {
+.player-turn,
+.game-over {
     display: flex;
     justify-content: center;
     margin: 1em 0;

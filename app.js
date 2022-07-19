@@ -168,15 +168,15 @@ let gameboard = (function () {
      * @param {number} x Row position 
      * @param {number} y Column position
      */
-    function addMarker(x, y, errorLog, gameEnded) {
+    function addMarker(x, y, gameEnded) {
         if (_gameOver) {
-            errorLog("Game is over. Start new game to continue playing.")
+            console.log("Game is over. Start new game to continue playing.")
         }
         else if (!_currentPlayer) {
-            errorLog("Current player not yet set.");
+            console.log("Current player not yet set.");
         }
         else if (!_isCellEmpty(x, y)) {
-            errorLog("Must choose an empty cell")
+            console.log("Must choose an empty cell")
         }
         else {
             _board[x][y] = _currentPlayer.marker;
@@ -371,11 +371,10 @@ let displayController = (function () {
      * @param {*} gridCell The HTML grid cell element that was just clicked
      */
     function _gridCellClicked(gameboard, gridCell) {
-        _hideErrorMessage();
         _displayCurrentPlayerTurn(gameboard);
         let row = parseInt(gridCell.getAttribute("data-row"));
         let col = parseInt(gridCell.getAttribute("data-col"));
-        gameboard.addMarker(row, col, _showErrorMessage, _gameEnded);
+        gameboard.addMarker(row, col, _gameEnded);
         updateCell(gameboard, row, col);
     }
 
@@ -386,29 +385,9 @@ let displayController = (function () {
      * @param {*} message THe winner message
      */
     function _gameEnded(message) {
-        _hideErrorMessage();
         _hideCurrentPlayerTurn();
         _showGameOverMessage();
         _showWinnerMessage(message);
-    }
-
-    /**
-     * Displays the error message in the error message box
-     * @param {*} message The error message
-     */
-    function _showErrorMessage(message) {
-        const errorMsgBox = document.querySelector(".errors");
-        errorMsgBox.textContent = message;
-        errorMsgBox.classList.add("shown");
-    }
-
-    /**
-     * Clears and hides the error message box
-     */
-    function _hideErrorMessage() {
-        const errorMsgBox = document.querySelector(".errors");
-        errorMsgBox.textContent = "";
-        errorMsgBox.classList.remove("shown");
     }
 
     /**
@@ -453,7 +432,6 @@ let displayController = (function () {
      * current player, and game over message boxes
      */
     function _hideAllMessages() {
-        _hideErrorMessage();
         _hideWinnerMessage();
         _hideCurrentPlayerTurn();
         _hideGameOverMessage();

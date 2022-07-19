@@ -50,8 +50,7 @@ body {
     border-bottom: none;
 }
 
-.winner,
-.errors {
+.winner{
     display: none;
 }
 

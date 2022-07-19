@@ -183,10 +183,10 @@ let gameboard = (function () {
             _movesTaken++;
             displayController.updateCell(gameboard, x, y);
             if (_checkForWinner(x, y, _currentPlayer.marker)) {
-                gameEnded(_currentPlayer.name + " wins");
+                gameEnded(this, _currentPlayer.name + " wins");
                 _gameOver = true;
             } else if (_checkForTiedGame()) {
-                gameEnded("Draw");
+                gameEnded(this, "Draw");
                 _gameOver = true;
             } else {
                 _changeTurns();
@@ -384,10 +384,21 @@ let displayController = (function () {
      * the winner message.
      * @param {*} message THe winner message
      */
-    function _gameEnded(message) {
+    function _gameEnded(gameboard, message) {
         _hideCurrentPlayerTurn();
         _showGameOverMessage();
         _showWinnerMessage(message);
+        _disableGridCells(gameboard);
+    }
+
+    /**
+     * Disables the grid cell clicking 
+     */
+    function _disableGridCells() {
+        let gridCells = document.querySelectorAll(".grid-cell");
+        gridCells.forEach(cell => {
+            cell.classList.add("unclickable");
+        })
     }
 
     /**

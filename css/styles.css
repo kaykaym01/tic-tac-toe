@@ -91,3 +91,7 @@ body {
 .hidden {
     display: none;
 }
+
+.unclickable {
+    pointer-events: none;
+}

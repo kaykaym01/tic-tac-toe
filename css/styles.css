@@ -72,13 +72,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 0.5em;
 }
 
 .player-turn,
 .game-over {
     display: flex;
     justify-content: center;
-    margin: 1em 0;
+    margin: 1.5em 0;
 }
 
 .hidden {

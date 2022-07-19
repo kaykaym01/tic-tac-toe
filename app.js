@@ -31,7 +31,7 @@ let game = (function () {
      */
     function restart() {
         console.log("Restarting game");
-        
+
         gameboard.resetBoard();
         gameboard.setCurrentPlayer(_player1);
         gameboard.setNextPlayer(_player2);
@@ -41,56 +41,46 @@ let game = (function () {
     }
 
     /**
-     * Ends the game
-     */
-    function end() {
-        console.log("Ending game");
-        gameboard.endGame();
+    *  Adds click event listeners to restart and end buttons
+    */
+    function _setUpGameButtons() {
+        const restartButton = document.querySelector(".restart-btn");
+        restartButton.addEventListener("click", restart);
     }
-        /**
-     * Adds click event listeners to restart and end buttons
-     */
-         function _setUpGameButtons() {
-            const restartButton = document.querySelector(".restart-btn");
-            restartButton.addEventListener("click", restart);
-    
-            const endButton = document.querySelector(".end-btn");
-            endButton.addEventListener("click", end);
-        }
-    
-        /**
-         * Adds both player names and markers to player display
-         */
-        function _setUpPlayersDisplay() {
-            _addPlayerToDisplay(_player1);
-            _addPlayerToDisplay(_player2);
-        }
-    
-        /**
-         * Creates a player display with the name and marker for a given player 
-         * @param {*} player The player to display
-         */
-        function _addPlayerToDisplay(player) {
-            const allPlayersDisplay = document.querySelector(".players");
-    
-            const playerDisplay = document.createElement("div");
-            playerDisplay.classList.add("player");
-    
-            const playerName = document.createElement("div");
-            playerName.classList.add("player-name");
-            playerName.textContent = player.name;
-            playerDisplay.append(playerName);
-    
-            const playerMarker = document.createElement("div");
-            playerMarker.classList.add("player-marker");
-            playerMarker.textContent = player.marker;
-            playerDisplay.append(playerMarker);
-    
-            allPlayersDisplay.append(playerDisplay);
-        }
-    
 
-    return { start, restart, end };
+    /**
+     * Adds both player names and markers to player display
+     */
+    function _setUpPlayersDisplay() {
+        _addPlayerToDisplay(_player1);
+        _addPlayerToDisplay(_player2);
+    }
+
+    /**
+     * Creates a player display with the name and marker for a given player 
+     * @param {*} player The player to display
+     */
+    function _addPlayerToDisplay(player) {
+        const allPlayersDisplay = document.querySelector(".players");
+
+        const playerDisplay = document.createElement("div");
+        playerDisplay.classList.add("player");
+
+        const playerName = document.createElement("div");
+        playerName.classList.add("player-name");
+        playerName.textContent = player.name;
+        playerDisplay.append(playerName);
+
+        const playerMarker = document.createElement("div");
+        playerMarker.classList.add("player-marker");
+        playerMarker.textContent = player.marker;
+        playerDisplay.append(playerMarker);
+
+        allPlayersDisplay.append(playerDisplay);
+    }
+
+
+    return { start, restart };
 })();
 
 let gameboard = (function () {
@@ -290,6 +280,7 @@ let gameboard = (function () {
      */
     function endGame() {
         _gameOver = true;
+        resetBoard();
     }
 
     /**

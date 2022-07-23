@@ -1,18 +1,37 @@
-const playerFactory = (name, marker) => {
-    /**
-     * Player changes their name from name to newName
-     * @param {*} newName 
-     */
-    function setName(newName) {
-        name = newName;
+/**
+ * Represents a player
+ */
+class player {
+    constructor(name, marker){
+        this._name = name;
+        this._marker = marker;
     }
 
-    return { name, marker, setName };
+    /**
+     * Sets name
+     */
+    set name(newName) {
+        this._name = newName;
+    }
+
+    /**
+     * Gets name
+     */
+    get name(){
+        return this._name;
+    }
+
+    /**
+     * Gets marker
+     */
+    get marker(){
+        return this._marker;
+    }
 }
 
 let game = (function () {
-    let _player1 = playerFactory("Player 1", "X");
-    let _player2 = playerFactory("Player 2", "O");
+    let _player1 = new player("Player 1", "X");
+    let _player2 = new player("Player 2", "O");
 
     /**
      * Starts the game 
